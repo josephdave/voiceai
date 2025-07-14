@@ -156,7 +156,7 @@
         <div id="hal-eye">
             <div id="hal-pupil"></div>
         </div>
-        <div id="status">GOOD EVENING, DAVE</div>
+        <div id="status">HOLA JOSE</div>
     </div>
     
     <script src="/socket.io/socket.io.js"></script>
@@ -270,7 +270,7 @@
                             0 0 30px rgba(102, 102, 102, 0.5),
                             inset 0 0 30px rgba(0, 0, 0, 0.8)
                         `;
-                        status.textContent = 'GOOD EVENING, DAVE';
+                        status.textContent = 'HOLA JOSE';
                     }, 1000);
                 };
                 
@@ -293,6 +293,17 @@
         socket.on('audio', (data) => {
             console.log('Received audio data');
             playAudio(data.audio);
+        });
+        
+        socket.on('queue_status', (data) => {
+            console.log('Queue status:', data);
+            if (data.status === 'queued') {
+                status.textContent = `MENSAJES: ${data.remaining} PENDIENTES`;
+            } else if (data.status === 'processing') {
+                status.textContent = `PROCESANDO: ${data.current}`;
+            } else if (data.status === 'error') {
+                status.textContent = `ERROR: ${data.error}`;
+            }
         });
         
         document.addEventListener('click', async () => {
